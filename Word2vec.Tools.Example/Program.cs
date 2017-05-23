@@ -19,7 +19,7 @@ namespace Word2vec.Tools.Example
             Console.WriteLine("Reading the model...");
 
             //Set your w2v bin file path here:
-            var path = @"C:\Vectors.bin";
+            var path = @"D:\GoogleNews-vectors-negative300.bin";
             var vocabulary = new Word2VecBinaryReader().Read(path);
 
             //For w2v text sampling file use:

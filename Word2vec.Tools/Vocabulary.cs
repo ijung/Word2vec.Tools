@@ -95,12 +95,30 @@ namespace Word2vec.Tools
         {
             return representation.GetClosestFrom(Words.Where(v => v != representation), maxCount);
         }
-       
-        /// <summary>
-        /// if word exists - returns "count" of best fits for target word
-        /// otherwise - returns empty array
-        /// </summary>
-        public DistanceTo[] Distance(string word, int count)
+
+		/// <summary>
+		/// returns "count" of closest words for target representation
+		/// </summary>
+		public DistanceTo[] Distance(Representation representation, int maxCount, string startWith)
+		{
+			return representation.GetClosestFrom(Words.Where(v => v != representation), maxCount, startWith);
+		}
+
+		public DistanceTo[] DistanceWithStartWithOut(Representation representation, int maxCount, string startWithout)
+		{
+			return representation.GetClosestFromWithout(Words.Where(v => v != representation), maxCount, startWithout);
+		}
+
+		public DistanceTo Distance(Representation A, Representation B)
+		{
+			return A.Distance(Words.Where(v => v != A), B);
+		}
+
+		/// <summary>
+		/// if word exists - returns "count" of best fits for target word
+		/// otherwise - returns empty array
+		/// </summary>
+		public DistanceTo[] Distance(string word, int count)
         {
             if (!this.ContainsWord(word))
                 return new DistanceTo[0];

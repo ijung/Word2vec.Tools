@@ -62,14 +62,40 @@ namespace Word2vec.Tools
             
             return new Representation(ans);
         }
-        public DistanceTo[] GetClosestFrom(IEnumerable<Representation> representations, int maxCount)
+
+		public DistanceTo Distance(IEnumerable<Representation> representations, Representation B)
+		{
+			return representations.Select(GetCosineDistanceTo)
+			   .Where(x => x.Representation == B)
+			   .First();
+		}
+
+		public DistanceTo[] GetClosestFrom(IEnumerable<Representation> representations, int maxCount)
         {
             return representations.Select(GetCosineDistanceTo)
                .OrderByDescending(s => s.DistanceValue)
                .Take(maxCount)
                .ToArray();
         }
-        public LinkedDistance<T>[] GetClosestFrom<T>(IEnumerable<T> representationsWrappers, Func<T, Representation> locator, int maxCount)
+
+		public DistanceTo[] GetClosestFrom(IEnumerable<Representation> representations, int maxCount, String startsWith)
+		{
+			return representations.Select(GetCosineDistanceTo)
+			   .OrderByDescending(s => s.DistanceValue)
+			   .Where(x => String.IsNullOrWhiteSpace(x.Representation.WordOrNull) == false && x.Representation.WordOrNull.StartsWith(startsWith) == true)
+			   .Take(maxCount)
+			   .ToArray();
+		}
+
+		public DistanceTo[] GetClosestFromWithout(IEnumerable<Representation> representations, int maxCount, String startsWithout)
+		{
+			return representations.Select(GetCosineDistanceTo)
+			   .OrderByDescending(s => s.DistanceValue)
+			   .Where(x => String.IsNullOrWhiteSpace(x.Representation.WordOrNull) == false && x.Representation.WordOrNull.StartsWith(startsWithout) == false)
+			   .Take(maxCount)
+			   .ToArray();
+		}
+		public LinkedDistance<T>[] GetClosestFrom<T>(IEnumerable<T> representationsWrappers, Func<T, Representation> locator, int maxCount)
         {
             return representationsWrappers.Select(r=>
                 new LinkedDistance<T>(r, GetCosineDistanceTo(locator(r))))
